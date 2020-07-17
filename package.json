@@ -1,0 +1,38 @@
+{
+  "name": "m6-sql-benchmark-be",
+  "version": "1.0.0",
+  "description": "M6-SQL-BE",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config ./src/server.js",
+    "debug": "nodemon --inspect -r dotenv/config ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/segundara/M6-sql-benchmark-BE.git"
+  },
+  "author": "segundara",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/segundara/M6-sql-benchmark-BE/issues"
+  },
+  "homepage": "https://github.com/segundara/M6-sql-benchmark-BE#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-list-endpoints": "^4.0.1",
+    "express-validator": "^6.6.0",
+    "fs-extra": "^9.0.1",
+    "mongoose": "^5.9.22",
+    "multer": "^1.4.2",
+    "pg": "^8.3.0",
+    "query-to-mongo": "^0.10.1",
+    "uniqid": "^5.2.0",
+    "validator": "^13.1.1"
+  }
+}
