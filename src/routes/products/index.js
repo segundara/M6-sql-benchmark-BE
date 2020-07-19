@@ -6,6 +6,7 @@ const router = express.Router()
 const fs = require("fs-extra")
 const path = require("path")
 const multer = require("multer")
+const { O_NOFOLLOW } = require("constants")
 
 const upload = multer()
 const port = process.env.PORT
@@ -14,15 +15,15 @@ const imagePath = path.join(__dirname, "../../../public/image/products")
 
 router.get("/", async(req, res)=>{
     
-    const sort = req.query.sort
-    const order = req.query.order
     const offset = req.query.offset || 0
     const limit = req.query.limit
+    const sort = req.query.sort
+    const order = req.query.order
 
-    delete req.query.sort
-    delete req.query.order
     delete req.query.offset
     delete req.query.limit
+    delete req.query.sort
+    delete req.query.order
 
     let query = 'SELECT * FROM "products" ' //create query
 
@@ -55,7 +56,7 @@ router.get("/search/:query", async(req, res) => {
                                     brand ILIKE '${"%" + req.params.query + "%"}' OR
                                     category ILIKE '${"%" + req.params.query + "%"}'
                                     LIMIT $1 OFFSET $2 
-                                    `, [ req.query.limit || 10, req.query.offset || 0])
+                                    `, [ req.query.limit , req.query.offset || 0])
 
     res.send(response.rows)
 })
@@ -66,19 +67,19 @@ router.get("/:id", async (req, res)=>{
     if (response.rowCount === 0) 
         return res.status(404).send("Not found")
 
-    res.send(response.rows[0])
+    res.send({data: response.rows[0]})
 })
 
 router.get("/:id/reviews", async (req, res)=>{
     const response = await db.query(`SELECT reviews._id, reviews.comment, reviews.rate,
-                                    reviews.productid, products.name FROM "reviews" 
+                                    reviews.productid, products.name, products.image_url FROM "reviews" 
                                     JOIN "products" ON reviews.productid = products._id 
                                     AND products._id = $1`, 
                                     [req.params.id])
     if (response.rowCount === 0) 
         return res.status(404).send("Not found")
 
-    res.send(response.rows)
+    res.send({data: response.rows})
 })
 
 router.post("/", async (req, res)=> {
@@ -92,15 +93,21 @@ router.post("/", async (req, res)=> {
 })
 
 router.put("/:id", async (req, res)=> {
+    body = {
+        ...req.body,
+        //"updated_at": Date.now()
+      }
+
     try {
         let params = []
         let query = 'UPDATE "products" SET '
-        for (bodyParamName in req.body) {
+        for (bodyParamName in body) {
             query += // for each element in the body I'll add something like parameterName = $Position
                 (params.length > 0 ? ", " : '') + //I'll add a coma before the parameterName for every parameter but the first
                 bodyParamName + " = $" + (params.length + 1) // += Category = $1 
 
-            params.push(req.body[bodyParamName]) //save the current body parameter into the params array
+            params.push(body[bodyParamName]) //save the current body parameter into the params array
+            //params.push(req.body{"updated_at": NOW()})
         }
 
         params.push(req.params.id) //push the id into the array
@@ -148,6 +155,7 @@ router.post("/:id/upload", upload.single("product"), async (req, res, next) => {
               bodyParamName + " = $" + (params.length + 1) // += Category = $1 
 
           params.push(req.body[bodyParamName]) //save the current body parameter into the params array
+          
       }
 
       params.push(req.params.id) //push the id into the array
