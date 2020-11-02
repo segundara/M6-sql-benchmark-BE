@@ -7,6 +7,7 @@ const fs = require("fs-extra")
 const path = require("path")
 const multer = require("multer")
 const { O_NOFOLLOW } = require("constants")
+var MulterAzureStorage = require('multer-azure-storage')
 
 const upload = multer()
 const port = process.env.PORT
@@ -137,15 +138,29 @@ router.delete("/:id", async (req, res) => {
     res.send("OK")
 })
 
+// EXTRA) Using multer middleware to upload image
+const getFileName = (file) => file.originalname
 
-router.post("/:id/upload", upload.single("product"), async (req, res, next) => {
+const multerOptions = multer({
+    storage: new MulterAzureStorage({
+        azureStorageConnectionString: process.env.STORAGE_CS,
+        containerName: 'shop-product',
+        containerSecurity: 'container',
+        fileName: getFileName
+    })
+})
+
+router.post("/:id/upload", multerOptions.single("product"), async (req, res, next) => {
 
     try {
-      await fs.writeFile(path.join(imagePath, `${req.params.id}.png`), req.file.buffer)
+    //   await fs.writeFile(path.join(imagePath, `${req.params.id}.png`), req.file.buffer)
       
-      req.body = {
-        image_url: `http://127.0.0.1:${port}/image/products/${req.params.id}.png`
-      }
+    //   req.body = {
+    //     image_url: `http://127.0.0.1:${port}/image/products/${req.params.id}.png`
+    //   }
+        req.body = {
+            image_url: `${req.file.url}`
+          }
 
       let params = []
       let query = 'UPDATE "products" SET '
