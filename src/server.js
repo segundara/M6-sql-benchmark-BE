@@ -12,7 +12,7 @@ const { join } = require("path")
 const server = express()
 // server.use(cors())
 
-const whitelist = ["http://localhost:3001"];
+const whitelist = ["http://localhost:3001/"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
