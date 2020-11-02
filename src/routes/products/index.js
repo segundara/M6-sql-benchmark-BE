@@ -9,10 +9,10 @@ const multer = require("multer")
 const { O_NOFOLLOW } = require("constants")
 var MulterAzureStorage = require('multer-azure-storage')
 
-const upload = multer()
-const port = process.env.PORT
+// const upload = multer()
+// const port = process.env.PORT
 
-const imagePath = path.join(__dirname, "../../../public/image/products")
+// const imagePath = path.join(__dirname, "../../../public/image/products")
 
 router.get("/", async(req, res)=>{
     
