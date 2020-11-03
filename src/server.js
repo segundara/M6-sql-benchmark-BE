@@ -12,7 +12,7 @@ const { join } = require("path")
 const server = express()
 // server.use(cors())
 
-const whitelist = ["https://strive-mazon-fe.azurewebsites.net"];
+const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
