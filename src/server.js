@@ -12,7 +12,9 @@ const { join } = require("path")
 const server = express()
 // server.use(cors())
 
-const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
+// const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
+// const whitelist = ["http://localhost:3001"]
+const whitelist = ["https://segundara.github.io/M6-sql-Benchmark-FE"]
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
