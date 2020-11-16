@@ -10,23 +10,23 @@ const listEndpoints = require("express-list-endpoints")
 const { join } = require("path")
 
 const server = express()
-server.use(cors())
+// server.use(cors())
 
-// // const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
-// // const whitelist = ["http://localhost:3001"]
-// const whitelist = ["https://segundara.github.io/M6-sql-Benchmark-FE/"]
-// // const whitelist = ["https://segundara.github.io"]
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (whitelist.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-// };
+// const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
+// const whitelist = ["http://localhost:3001"]
+const whitelist = ["https://segundara.github.io/M6-sql-Benchmark-FE/"]
+// const whitelist = ["https://segundara.github.io"]
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
-// server.use(cors(corsOptions));
+server.use(cors(corsOptions));
 
 // const staticFolderPath = join(__dirname, "../public")
 // server.use(express.static(staticFolderPath))
@@ -35,10 +35,10 @@ server.use(express.json())
 // server.get("/", (req, res)=> {
 //     res.send("The server is running!")
 // })
-server.use(express.static(path.join(__dirname, 'build')));
-server.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// server.use(express.static(path.join(__dirname, 'build')));
+// server.get('/*', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 
 server.use("/products", productRouter)
 server.use("/reviews", reviewRouter)
