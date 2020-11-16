@@ -35,6 +35,10 @@ server.use(express.json())
 // server.get("/", (req, res)=> {
 //     res.send("The server is running!")
 // })
+server.use(express.static(path.join(__dirname, 'build')));
+server.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 server.use("/products", productRouter)
 server.use("/reviews", reviewRouter)
