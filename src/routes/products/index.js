@@ -9,6 +9,10 @@ const multer = require("multer")
 const { O_NOFOLLOW } = require("constants")
 var MulterAzureStorage = require('multer-azure-storage')
 
+
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 // const upload = multer()
 // const port = process.env.PORT
 
@@ -139,16 +143,31 @@ router.delete("/:id", async (req, res) => {
 })
 
 // EXTRA) Using multer middleware to upload image
-const getFileName = (file) => file.originalname
+// const getFileName = (file) => file.originalname
 
-const multerOptions = multer({
-    storage: new MulterAzureStorage({
-        azureStorageConnectionString: process.env.STORAGE_CS,
-        containerName: 'shop-product',
-        containerSecurity: 'container',
-        fileName: getFileName
-    })
-})
+// const multerOptions = multer({
+//     storage: new MulterAzureStorage({
+//         azureStorageConnectionString: process.env.STORAGE_CS,
+//         containerName: 'shop-product',
+//         containerSecurity: 'container',
+//         fileName: getFileName
+//     })
+// })
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: "DEV",
+    },
+});
+
+const multerOptions = multer({ storage: storage });
 
 router.post("/:id/upload", multerOptions.single("product"), async (req, res, next) => {
 
@@ -159,7 +178,7 @@ router.post("/:id/upload", multerOptions.single("product"), async (req, res, nex
     //     image_url: `http://127.0.0.1:${port}/image/products/${req.params.id}.png`
     //   }
         req.body = {
-            image_url: `${req.file.url}`
+            image_url: `${req.file.path}`
           }
 
       let params = []
