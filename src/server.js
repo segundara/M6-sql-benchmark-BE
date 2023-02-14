@@ -13,9 +13,9 @@ const server = express()
 // server.use(cors())
 
 // const whitelist = ["https://strive-mazon-fe.herokuapp.com"];
-// const whitelist = ["http://localhost:3001"]
+const whitelist = ["http://localhost:3000", "https://soft-paletas-ef822f.netlify.app"]
 // const whitelist = ["https://segundara.github.io/M6-sql-Benchmark-FE/"]
-const whitelist = ["https://segundara.github.io"]
+// const whitelist = ["https://segundara.github.io"]
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
